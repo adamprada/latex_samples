@@ -1,0 +1,561 @@
+\chapter{Background theory}
+In this chapter we present the theoretical background, important derivations and approximative treatments required for this work. In section \ref{sec:density_operators} a brief introduction to the description of quantum systems using density operators based on standard literature is given.\supercite{Ballentine1998,Zwanzig2001,Weiss2012,Nitzan2013,Sakurai2017} In section \ref{sec:system_bath} the system-bath model used throughout this work is described. In sections \ref{sec:feynman_vernon_functional}--\ref{sec:heom} the reader is guided through the derivation of the hierarchical equations of motion using the Feynman-Vernon functional. The following section \ref{sec:truncation} explains how the infinite hierarchy can be truncated in a numerical simulation, and the last section \ref{sec:phase_space} shows that using Wigner transforms we can obtain a classical analogue of the quantum equations of motion.
+\section{Density operators} \label{sec:density_operators}
+\subsection{Pure states}
+When systems are described in quantum physics, a typical object to use is a wave function $\psi(t)$, which satisfies Schr\"odinger's equation
+\begin{equation}
+	\mathrm{i}\hbar\frac{\partial}{\partial t} |\psi\rangle= \hat{H}|\psi\rangle.
+\end{equation}
+An alternative way of describing the system is using a density operator $\hat{\rho}$, which for a pure quantum state is defined as
+\begin{equation}
+	\hat{\rho} \equiv |\psi\rangle\langle\psi|.
+\end{equation}
+If we expand $\psi$ in a basis set $\{\varphi_i\}$ as $\psi = \sum_{n} c_n \varphi_n$, then the density operator can be expressed as
+\begin{equation}
+	\hat{\rho} = \sum_m \sum_n c_m c_n^* |\varphi_m\rangle\langle\varphi_n|
+\end{equation}
+or as a matrix in the space of the basis vectors, which is how density operators are handled numerically,
+\begin{equation}
+	\rho_{mn} = c_m c_n^*.
+\end{equation}
+The diagonal elements then give the probabilities of finding the system in the particular state, resulting in the normalisation condition $\mathrm{Tr}[\hat{\rho}] = 1$, where $\mathrm{Tr}$ denotes the quantum mechanical trace. In addition, for any operator $\hat{A}$, the expectation value can be obtained as $\langle \hat{A} \rangle = \mathrm{Tr}[\hat{A}\hat{\rho}]$, which can be shown by expanding in any complete basis.
+
+The equivalent of the Schr\"odinger's equation for density matrices is the quantum Liouville equation
+\begin{equation}
+	\mathrm{i}\hbar\frac{\partial \hat{\rho}}{\partial t} = \hat{H}\hat{\rho} - \hat{\rho}\hat{H} = \mathcal{\hat{L}}\hat{\rho},
+	\label{eq:quantum_liouville}
+\end{equation}
+where $\mathcal{\hat{L}}$ is the Liouvillian superoperator.
+\subsection{Statistical mixtures}
+In many physical situations we have ensembles of particles, where each particle can have many quantum states, but where the overall quantum state of the system is either not known or not of interest. Then, assuming that the individual particles have random complex phases relative to each other (i.e.~the ensemble is not coherent), we can extend the definition of the density operator. If the probability of measuring quantum state $\psi_j$ is $P_j$, then the density operator is
+\begin{equation}
+	\hat{\rho} = \sum_j P_j |\psi_j\rangle\langle\psi_j|.
+\end{equation}
+This is a very natural extension of the previous definition, because it preserves many of the properties of the pure state density operator. The diagonal elements still give the probability of finding the system in the specific state, but now also statistically averaged over the ensemble. The trace of a product with an operator $\langle \hat{A} \rangle = \mathrm{Tr}[\hat{A}\hat{\rho}]$ now gives the expectation value for the distribution. Importantly, the quantum Liouville equation (eq.~\ref{eq:quantum_liouville}) still holds.
+\section{System-bath model}\label{sec:system_bath}
+Let us consider a model one-dimensional system coupled to a bath consisting of harmonic oscillators. The system is fully described by its mass $m$ and potential $V_\mathrm{S}(\hat{q})$. The bath is described by the frequencies $\{\omega_j\}$, masses $\{m_j\}$ and coupling coefficients $\{c_j\}$ of the oscillators. The full Hamiltonian can then be expressed as
+\begin{equation}
+	\hat{H} = \frac{\hat{p}^2}{2m} + V_\mathrm{S}(\hat{q}) + \sum_{j} \left[\frac{\hat{p}_j^2}{2m_j} + \frac{m_j \omega_j^2}{2}\left(\hat{x}_j - \frac{c_j \hat{q}}{m_j \omega_j^2}\right)^2\right],
+\end{equation}
+where $\hat{p}$ and $\hat{q}$ describe the system, and $\{\hat{p_j}\}$ and $\{\hat{x}_j\}$ describe the bath. We can split the full Hamiltonian into three parts
+\begin{equation}
+	\hat{H} = \hat{H}_\mathrm{S} + \hat{H}_\mathrm{B} + \hat{H}_\mathrm{SB}.
+\end{equation}
+The system Hamiltonian is
+\begin{equation}
+	\hat{H}_\mathrm{S} = \frac{\hat{p}^2}{2m} + V(\hat{q}),
+\end{equation}
+where
+\begin{equation}
+V(\hat{q}) = V_\mathrm{S}(\hat{q}) + \frac{a_\mathrm{ren}}{2}\hat{q}^2
+\label{eq:renorm_pot}
+\end{equation}
+with
+\begin{equation}
+	a_\mathrm{ren} = \sum_j \frac{c_j^2}{m_j \omega_j^2},
+\end{equation}
+the bath Hamiltonian is
+\begin{equation}
+	\hat{H}_\mathrm{B} = \sum_{j}\left[ \frac{\hat{p}_j^2}{2m_j} + \frac{m_j \omega_j^2}{2}\hat{x}_j^2 \right]
+\end{equation}
+and the interaction Hamiltonian is
+\begin{equation}
+	\hat{H}_\mathrm{SB} = -\hat{X}(\bm{\hat{x}})\hat{q},
+\end{equation}
+where $\hat{X}$ is the collective bath coordinate operator given by
+\begin{equation}
+	\hat{X}(\bm{\hat{x}}) = \sum_j c_j \hat{x}_j,
+\end{equation}
+where the vector $\bm{\hat{x}}= \{\hat{x}_j\}$. The reason for this form, which includes the renormalisation potential, is to maintain translational symmetry for $V_S(\hat{q})~=~0$.\supercite{Caldeira1983b}
+
+For a set of states $\{|q_i,\bm{x}_i\rangle\}$ in the Hilbert space of system and bath coordinates with probabilities $\{P_i\}$, the density operator is
+\begin{equation}
+	\hat{\rho}(q,\bm{x}) = \sum_i P_i|q_i,\bm{x}_i\rangle\langle q_i,\bm{x}_i|,
+\end{equation}
+where the quantities in parentheses denote the Hilbert space in which the density operator is defined. A corresponding density matrix in the position representation would then be
+\begin{equation}
+	\rho(q,\bm{x};q',\bm{x}') = \langle q,\bm{x}|\hat{\rho}|q',\bm{x}'\rangle,
+\end{equation}
+where the functions in parentheses denote the coordinate values at which the matrix element is calculated.
+
+In the Schr\"odinger picture, which we shall adopt, the operators are constant in time, while the wave functions evolve. However, the density operator is an exception to this rule since it is an operator composed of wave functions. To denote this time dependence we shall use the notation
+\begin{equation}
+	\hat{\rho}(q,\bm{x};t=\tau) = \hat{\rho}_\tau(q,\bm{x})\text{ and }
+	\rho(q,\bm{x};q',\bm{x}';t=\tau)=\rho_\tau(q,\bm{x};q',\bm{x}').
+\end{equation}
+\section{Feynman-Vernon influence functional}\label{sec:feynman_vernon_functional}
+We aim to obtain the equations of motion for the system. The state of the full system-bath set-up is described by a density operator $\hat{\rho}(q,\bm{x})$. At a non-zero time, the density operator can be expressed using the time propagation operators as%\footnote[3]{For clarity ``hats" will be omitted for the position operators $\hat{q}\equiv q$ and $\hat{x}\equiv x$}
+\begin{equation}
+	\hat{\rho}_t(q,\bm{x}) = \mathrm{e}^{-\mathrm{i}\hat{H}(q,\bm{x})t/\hbar} \hat{\rho}_0(q,\bm{x}) \mathrm{e}^{+\mathrm{i}\hat{H}(q,\bm{x})t/\hbar}.
+\end{equation}
+Given that we are interested only in the state of the system at time $t$, we can trace out the bath degrees of freedom to obtain a reduced density operator
+\begin{equation}
+	\hat{\rho}_t(q) = \int \mathrm{d}\bm{x}\langle\bm{x}|\hat{\rho}_t(q,\bm{x}) |\bm{x}\rangle,
+\end{equation}
+where $\int \mathrm{d}\bm{x}$ denotes integration over all bath degrees of freedom.
+
+In addition, we shall assume that the whole system was initially in a factorised state, i.e.~$\hat{\rho}(q,\bm{x}) = \hat{\rho}(q)\hat{\rho}(\bm{x})$ and that the bath was in a thermal equilibrium ($\rho_0(\bm{x},\bm{x}') = \langle\bm{x}|\mathrm{e}^{-\beta \hat{H}_B}/Z_\mathrm{B}|\bm{x}'\rangle $), but not in equilibrium with the system. This can be done without loss of generality, because we can account for initial correlations once we obtain the hierarchy of density operators.\supercite{Tanimura1990a} We obtain
+\begin{equation}
+	\rho_0(q,\bm{x}; q',\bm{x}')
+	= \rho_0(q,q')\rho_0(\bm{x},\bm{x}')
+	= \rho_0(q,q')\langle\bm{x}|\frac{\mathrm{e}^{-\beta \hat{H}_B}}{Z_\mathrm{B}}|\bm{x}'\rangle
+	\label{eq:factorised}
+\end{equation}
+where the inverse temperature $\beta = 1/(k_\mathrm{B}T)$. With this initial matrix and using standard identities, the density matrix at time $t$ can be cast into the form\footnote[3]{The Feynman path integral notation requires position to be a function of time. This can be at first sight contradictory to the Schr\"odinger picture, in which the position operator is time independent. It can be reconciled by considering $q_\tau \equiv q(\tau)$ with $\tau \neq t$ as a dummy variable emerging from the identity $\hat{I}=\int\mathrm{d}q_\tau |q_\tau\rangle\langle q_\tau|$, while $q_t\equiv q$ is the position basis set in which the density matrix is represented.}
+\begin{multline}
+	\rho_t(q_t,q_t')=\int\mathrm{d}q_0\int\mathrm{d}q_0'
+	\int\mathrm{d}\bm{x}_0
+	\int\mathrm{d}\bm{x}_0'
+	\int\mathrm{d}\bm{x}\ 
+	\langle q_t, \bm{x}|\mathrm{e}^{-\mathrm{i}\hat{H}t/\hbar}|q_0, \bm{x}_0\rangle\\
+	\times
+	 \rho_0(q_0,q_0')
+	 \langle\bm{x}_0|\frac{\mathrm{e}^{-\beta \hat{H}_B}}{Z_\mathrm{B}}|\bm{x}_0'\rangle
+	 \langle q'_0, \bm{x}_0'|\mathrm{e}^{+\mathrm{i}\hat{H}t/\hbar}|q_t', \bm{x}\rangle
+\end{multline}
+This integral can be re-written using the Feynman-Vernon influence functional as\supercite{Feynman1963b}
+\begin{multline}
+	\rho_t(q_t,q_t')=
+	\int\mathrm{d}q_0 
+	\int\mathrm{d}q_0'
+	\int_{q_0= q(0)}^{q_t = q(t)} \mathcal{D}[q(\tau)]
+	\int_{q_0'= q'(0)}^{q_t'= q'(t)} \mathcal{D}[q'(\tau)]
+	\ \rho_0(q_0,q_0')
+	\\
+	\times F_t(q(\tau),q'(\tau))G_t(q(\tau),q'(\tau)),
+	\label{eq:rho_t}
+\end{multline}
+where $\int \mathcal{D}[q(\tau)]$ denotes a Feynman path integral,\supercite{Feynman2010} $G_t$ is the propagator/kernel for an isolated system and $F_t$ is the influence functional. The propagator is given by 
+\begin{equation}
+	G_t(q(\tau),q'(\tau)) = \exp\left[\frac{\mathrm{i}}{\hbar}\bigl[S_\mathrm{S}(q(\tau);t)-S_\mathrm{S}(q'(\tau);t)\bigr]\right],
+\end{equation}
+where the classical action for an isolated system is \footnote[2]{We have moved from the operator notation to the eigenvalues in the position basis, i.e.~$\hat{q} \to q$ since these are the classical actions.}
+\begin{equation}
+	S_\mathrm{S}(q(\tau);t) = \int_0^t \mathrm{d}\tau\ L(\dot{q},q,\tau) = \int_0^t\mathrm{d}\tau\left[\frac{m\dot{q}^2(\tau)}{2}-V\bigl(q(\tau)\bigr)\right],
+\end{equation}
+with $L$ denoting the Lagrangian. All system-bath interaction is contained in the influence functional which is given by
+\begin{multline}
+	F_t(q(\tau),q'(\tau)) = \int\mathrm{d}\bm{x}_0
+	\int\mathrm{d}\bm{x}_0'
+	\int\mathrm{d}\bm{x} 
+	\int\mathcal{D}[\bm{x}(t)]
+	\int\mathcal{D}[\bm{x}'(t)]
+	\ \rho_0(\bm{x}_0,\bm{x}_0')
+	\\
+	\times\exp\left[\frac{\mathrm{i}}{\hbar}[S_\mathrm{B}(\bm{x}(\tau);t)-S_\mathrm{B}(\bm{x}'(\tau);t)+S_\mathrm{SB}(q(\tau),\bm{x}(\tau);t)-S_\mathrm{SB}(q'(\tau),\bm{x}'(\tau);t)]\right],
+	\label{eq:influence_functional_raw}
+\end{multline}
+where $S_\mathrm{B}$ and $S_\mathrm{SB}$ are the classical actions for the bath and for the interaction respectively and are given by
+\begin{equation}
+	S_\mathrm{B}(\bm{x}(\tau);t) = \int_0^t\mathrm{d}\tau \sum_j \left[
+	\frac{m_j\dot{x}_j^2(\tau)}{2}
+	 - \frac{m_j \omega_j^2}{2}x_j^2(\tau)
+	 \right]
+\end{equation}
+and
+\begin{equation}
+S_\mathrm{SB}(q(\tau),\bm{x}(\tau);t) = \int_0^t\mathrm{d}\tau \bigl[
++X(\bm{x}(\tau))q(\tau)
+\bigr].
+\end{equation}
+The functional integration in eq.~\ref{eq:influence_functional_raw} can be done exactly for this system and yields\supercite{Caldeira1983b}
+\begin{multline}
+	F_t(q(\tau),q'(\tau)) = \exp\biggl[-\frac{1}{\hbar^2}
+	\int_0^t\mathrm{d}\tau'
+	\int_0^{\tau'}\mathrm{d}\tau
+	[q(\tau')-q'(\tau')] \\
+	\times[\alpha(\tau'-\tau)q(\tau)-\alpha^*(\tau'-\tau)q'(\tau)]\biggr],
+\end{multline}
+where $\alpha(t) = \langle \hat{X}(\tau)\hat{X}(\tau+t)\rangle$ is the time autocorrelation function of the collective bath coordinate given by
+\begin{equation}
+\alpha(t) = \hbar\sum_j \frac{c_j^2}{2m_j\omega_j}\left(\mathrm{e}^{-\mathrm{i}\omega_j t} + \frac{\mathrm{e}^{+\mathrm{i}\omega_j t}+\mathrm{e}^{-\mathrm{i}\omega_j t}}{\mathrm{e}^{\beta\hbar\omega_j}-1}\right).
+\end{equation}
+Following the convention in the literature, we can define
+\begin{equation}
+q^\circ(t) \equiv q(t)+q'(t)\text{  and  } q^\times(t) \equiv q(t)-q'(t),
+\end{equation}
+which in operator notation is equivalent to the commutator and anti-commutator superoperators
+\begin{equation}
+\hat{A}^\circ \hat{B} \equiv \hat{A}\hat{B}+\hat{B}\hat{A}=[\hat{A},\hat{B}]_+\text{  and  } \hat{A}^\times \hat{B} \equiv \hat{A}\hat{B}-\hat{B}\hat{A} = [\hat{A},\hat{B}].
+\end{equation}
+This simplifies the formula for the influence functional to
+\begin{multline}
+F_t(q(\tau),q'(\tau)) = \exp\biggl[-\frac{1}{\hbar^2} \\
+\times
+\int_0^t\mathrm{d}\tau'
+q^\times(\tau') 
+\int_0^{\tau'}\mathrm{d}\tau
+[\alpha(\tau'-\tau)q(\tau)-\alpha^*(\tau'-\tau)q'(\tau)]\biggr].
+\label{eq:influence_functional}
+\end{multline}
+Considering the real and imaginary parts of $\alpha(t)$
+\begin{equation}
+\alpha_\mathrm{R}(t) = \hbar\sum_j \frac{c_j^2}{2m_j\omega_j} \cos(\omega_j t) \coth\left(\frac{\beta\hbar\omega_j}{2}\right),
+\end{equation}
+\begin{equation}
+\alpha_\mathrm{I}(t) = - \hbar\sum_j \frac{c_j^2}{2m_j\omega_j} \sin(\omega_j t),
+\end{equation}
+where
+\begin{equation}
+\alpha_\mathrm{R} \equiv \mathrm{Re}\{\alpha\},\ \alpha_\mathrm{I} \equiv \mathrm{Im}\{\alpha\},
+\end{equation}
+we can further simplify the influence functional to
+\begin{multline}
+F_t(q(\tau),q'(\tau)) = \\
+\exp\biggl[-\frac{1}{\hbar^2}
+\int_0^t\mathrm{d}\tau'
+\ q^\times(\tau')
+\int_0^{\tau'}\mathrm{d}\tau
+ \biggl(\alpha_\mathrm{R}(\tau'-\tau)q^\times(\tau)+\mathrm{i}\alpha_\mathrm{I}(\tau'-\tau)q^\circ(\tau)\biggr)\biggr]
+\end{multline}
+
+The functional integrals in eq.~\ref{eq:rho_t} can be rewritten as infinite sums and products in discretised time following Feynman's definition\supercite{Feynman2010} to give
+\begin{equation}
+\rho_t(q_t,q_t')=
+\int'\mathrm{d}\bm{q} 
+\int'\mathrm{d}\bm{q}'
+\ \rho_0(q_0,q_0')F_t(\bm{q},\bm{q}') G_t(\bm{q},\bm{q}'),
+\end{equation}
+where $\bm{q} = \{q_0, \dots, q_n, \dots, q_N\}$, with $q_N\equiv q_t$. The integrals are $\int'\mathrm{d}\bm{q} = \int\mathrm{d}q_0\ \dots \int\mathrm{d}q_n \dots \int\mathrm{d}q_{N-1}$, i.e.~integrals over all $q_n$'s except for $q_t$. In this notation the influence functional is given by
+\begin{equation}
+F_t(\bm{q},\bm{q}') = \exp\biggl[-\frac{\epsilon^2}{\hbar^2} 
+\sum_{n=0}^N w_n q_n^\times
+\sum_{m=0}^{n} w_m
+\biggl(\alpha_\mathrm{R}(t_n-t_m)q_m^\times+\mathrm{i}\alpha_\mathrm{I}(t_n-t_m)q_m^\circ\biggr)\biggr],
+\end{equation}
+where $t_n=nt/N$, $\epsilon=t/N$ and
+\begin{equation}
+	w_n = 
+	\begin{cases} 
+	1/2 & \text{for }n=0,N \\
+	1 & \text{otherwise}
+	\end{cases},
+\end{equation}
+and $G_t(\bm{q},\bm{q}')$ is given by\footnote[2]{By using Trotter factorisation, splitting $\exp(-\mathrm{i}\hat{H}/\hbar)$ into the kinetic and potential part, inserting position representation identities $\hat{I}=\int\mathrm{d}q_\tau |q_\tau\rangle\langle q_\tau|$ and evaluating the kinetic energy operator in position representation as $\langle q_1|\exp(-\mathrm{i}\epsilon \hat{T}/\hbar)|q_2\rangle = \sqrt{2\pi\hbar m/(\epsilon\mathrm{i})}\exp(\mathrm{i}m(q_2-q_1)^2/(2\hbar\epsilon))$, we can show that $\int_{q_0}^{q}\mathcal{D}q(\tau)\exp(\frac{\mathrm{i}}{\hbar}S(q(\tau),t))=\langle q_0|\exp(-\mathrm{i}\hat{H}/\hbar)|q_t\rangle$.}
+
+
+\begin{multline}
+	G_t(\bm{q},\bm{q}') =
+	\langle q_N|\mathrm{e}^{-\mathrm{i}\hat{H}_\mathrm{S}\epsilon/\hbar}|q_{N-1}\rangle
+	\langle q_{N-1}|\mathrm{e}^{-\mathrm{i}\hat{H}_\mathrm{S}\epsilon/\hbar}|q_{N-2}\rangle
+	\dots
+	\langle q_1|\mathrm{e}^{-\mathrm{i}\hat{H}_\mathrm{S}\epsilon/\hbar}|q_0\rangle \\
+	\times
+	\langle q'_N|\mathrm{e}^{+\mathrm{i}\hat{H}_\mathrm{S}\epsilon/\hbar}|q'_{N-1}\rangle
+	\langle q'_{N-1}|\mathrm{e}^{+\mathrm{i}\hat{H}_\mathrm{S}\epsilon/\hbar}|q'_{N-2}\rangle
+	\dots
+	\langle q'_1|\mathrm{e}^{+\mathrm{i}\hat{H}_\mathrm{S}\epsilon/\hbar}|q'_0\rangle.
+\end{multline}
+\section{Bath description}
+Given the form of the equations presented in the previous section, the whole harmonic oscillator bath can be represented using a single function $J(\omega)$, typically termed the spectral density, which we shall define as
+\begin{equation}
+	J(\omega) = \hbar \sum_j \frac{c_j^2}{2m_j \omega_j}\delta(\omega-\omega_j).
+\end{equation}
+This simplifies the equations for $\alpha$'s to
+\begin{equation}
+\alpha(t) = \int_{0}^{\infty}\mathrm{d}\omega\ J(\omega)\left(\mathrm{e}^{-\mathrm{i}\omega t} + \frac{\mathrm{e}^{+\mathrm{i}\omega t}+\mathrm{e}^{-\mathrm{i}\omega t}}{\mathrm{e}^{\beta\hbar\omega}-1}\right),
+\end{equation}
+\begin{equation}
+\alpha_\mathrm{R}(t) = \int_{0}^{\infty}\mathrm{d}\omega\ J(\omega)\cos(\omega t) \coth\left(\frac{\beta\hbar\omega}{2}\right),
+\end{equation}
+and
+\begin{equation}
+\alpha_\mathrm{I}(t) = - \int_{0}^{\infty}\mathrm{d}\omega\ J(\omega) \sin(\omega t),
+\end{equation}
+as well as the expression for $a_\mathrm{ren}$
+\begin{equation}
+a_\mathrm{ren} = 2\int_{0}^{\infty}\mathrm{d}\omega\ \frac{J(\omega)}{\hbar\omega}.
+\label{eq:aren}
+\end{equation}
+Negative frequencies of harmonic oscillators in the bath are not physical, but if we define $J(\omega)$ to be an odd function, i.e.~$J(\omega) = -J(-\omega)$,\footnote[3]{This is equivalent to redefining $J\equiv \hbar \sum_j \frac{c_j^2}{2m_j \omega_j}[\delta(\omega-\omega_j)-\delta(\omega+\omega_j)]$. Note that this does not retain the normalisation of $J$, but doubles it.} we can express $\alpha$'s also as
+\begin{equation}
+\alpha(t) = \int_{-\infty}^{\infty}\mathrm{d}\omega\ J(\omega)\frac{\mathrm{e}^{+\mathrm{i}\omega t}}{\mathrm{e}^{\beta\hbar\omega}-1},
+\end{equation}
+\begin{equation}
+\alpha_\mathrm{R}(t) = \frac{1}{2}\int_{-\infty}^{\infty}\mathrm{d}\omega\ J(\omega)\cos(\omega t) \coth\left(\frac{\beta\hbar\omega}{2}\right)
+\end{equation}
+and
+\begin{equation}
+\alpha_\mathrm{I}(t) = - \frac{1}{2}\int_{-\infty}^{\infty}\mathrm{d}\omega\ J(\omega) \sin(\omega t),
+\end{equation}
+which, as we shall see, may be easier to evaluate.
+
+Following the literature\supercite{Caldeira1983a,Caldeira1983b,Grabert1984a,Tanimura1989}, we have chosen the Debye bath (also Drude bath or Ohmic bath with Lorentz-Drude cutoff), the spectral density of which takes the form
+\begin{equation}
+	J(\omega) = \frac{\hbar\eta}{\pi}\frac{\gamma^2\omega}{\gamma^2 + \omega^2},
+\end{equation}
+where $\eta$ is the strength of the bath coupling and $\gamma$ is the cutoff frequency.
+\clearpage
+\noindent The form of $\alpha$ is then
+\begin{equation}
+	\alpha(t) = \frac{\hbar\eta\gamma^2}{\pi}\int_{-\infty}^{\infty}\mathrm{d}\omega\ 
+	\frac{\omega}{\gamma^2 + \omega^2} \frac{\mathrm{e}^{+\mathrm{i}\omega t}}{\mathrm{e}^{\beta\hbar\omega}-1},
+\end{equation}
+which can be evaluated by contour integration in the complex plane along contours $z_1 = R,\ R \in (-\infty, \infty)$ and $z_2= \lim\limits_{R\to \infty} R \mathrm{e}^{-\mathrm{i}\theta},\ \theta \in [0,\pi]$. This contour contains poles at $z = -\mathrm{i}\gamma$ and at $z= -\mathrm{i}\gamma_k$ where $\gamma_k = 2\pi k/(\beta\hbar),\ k~=~1,2,3,\dots$ are the Matsubara frequencies. This yields
+\begin{equation}
+\alpha(t) = \sum_{k=0}^{\infty} C_k \mathrm{e}^{-\gamma_k t},
+\label{eq:alpha_series}
+\end{equation}
+where $\gamma_0 \equiv \gamma$ and where the coefficients are given by
+\begin{equation}
+\begin{split}
+	C_0 &= \frac{\hbar\eta\gamma^2}{2}\left[\cot\left(\frac{\beta\hbar\gamma}{2}\right) -\mathrm{i}\right],\\
+	C_{k>0} &= \frac{2\eta\gamma^2}{\beta}\frac{\gamma_k}{\gamma_k^2-\gamma^2}.
+\end{split}
+\end{equation}
+In the rest of this work we shall refer to the $k>0$ terms as the Matsubara terms because of the appearance of Matsubara frequencies $\gamma_{k>0}$. The  formulae for the real and imaginary parts are then
+\begin{equation}
+\alpha_\mathrm{R}(t) = \frac{\hbar\eta\gamma^2}{2}\cot\left(\frac{\beta\hbar\gamma}{2}\right)\mathrm{e}^{-\gamma t} + \sum_{k=1}^{\infty} C_k \mathrm{e}^{-\gamma_k t}
+\end{equation}
+and
+\begin{equation}
+\alpha_\mathrm{I}(t) = - \frac{\hbar\eta\gamma^2}{2}\mathrm{e}^{-\gamma t}.
+\end{equation}
+For the renormalisation coefficient in eq.~\ref{eq:aren} the chosen spectral density gives
+\begin{equation}
+	a_\mathrm{ren} = \eta\gamma.
+\end{equation}
+\newpage
+
+\section{Hierarchical equations of motion (HEOM)}\label{sec:heom}
+To obtain the equations of motion for the density matrix, we differentiate it with respect to time. This is most easily done with the continuous form of equations (eq.~\ref{eq:rho_t} for $\rho$ and eq.~\ref{eq:influence_functional} for $F_t$). Firstly we shall assume the general form of $\alpha$ given by eq.~\ref{eq:alpha_series}. Carefully differentiating and observing the emerging patterns, one can obtain an infinite network of coupled differential equations for a hierarchy of density matrices\supercite{Ishizaki2005,Xu2007a}
+\begin{equation}
+	\begin{split}
+	\frac{\partial     \hat{\rho}_{\{0\}}    }{\partial t} &=
+	-\frac{\mathrm{i}}{\hbar}\hat{\mathcal{L}}\hat{\rho}_{\{0\}}
+	-\frac{\mathrm{i}}{\hbar}\hat{q}^\times \sum_{k=0}^{\infty}\hat{\rho}_{\{0\}_k^+}\\
+	&\dots\\
+	\frac{\partial \hat{\rho}_{\bm{n}} }{\partial t} &=
+	-\left(\frac{\mathrm{i}}{\hbar}\hat{\mathcal{L}}+\sum_{k=0}^{\infty}n_k \gamma_k \right)\hat{\rho}_{\bm{n}}
+	-\frac{\mathrm{i}}{\hbar}\hat{q}^\times \sum_{k=0}^{\infty}\hat{\rho}_{\bm{n}_k^\oplus}
+	-\frac{\mathrm{i}}{\hbar}\sum_{k=0}^{\infty}n_k\left(C_k\hat{q}\hat{\rho}_{\bm{n}_k^\ominus}-C_k^*\hat{\rho}_{\bm{n}_k^\ominus}\hat{q}\right)\\
+	&\dots\\
+	\end{split}
+	\label{eq:eom}
+\end{equation}
+
+where the Liouvillian is given by
+\begin{equation}
+	\begin{split}
+	\hat{\mathcal{L}}\hat{\rho} &= \hat{H}_\mathrm{S}^\times \hat{\rho} = \hat{H}_\mathrm{S}\hat{\rho}-\hat{\rho}\hat{H}_\mathrm{S}\\
+	&\text{or}\\
+	\mathcal{L}(q,q') &=  H_\mathrm{S}(q)-H_\mathrm{S}(q')
+	\end{split}
+\end{equation}
+and where $\hat{\rho}_{\bm{n}}$ are the auxiliary density operators (ADOs). These density operators are indexed by infinite-dimensional vectors $\bm{n} = \{n_k\},\ k=0,1,2,\dots$ Each component of these vectors can take all non-negative integer values $n_k = 0,1,2,\dots$ We have also introduced the notation $\bm{n}_k^{\oplus/\ominus} = \{n_0,\dots,n_{k-1},n_k\pm1,n_{k+1},\dots\}$. The $\hat{\rho}_{\bm{n}}$ with zero vector $\bm{n} = \{0\} = \{n_k\},\ n_k=0\ \forall k$ is the physical density matrix $\hat{\rho}_t \equiv \hat{\rho}_{\{0\}}$ while all the ADOs are just an algebraically convenient way of handling these complex equations of motion, but bear no direct physical significance. It is also useful to define the tier of an ADO as
+\begin{equation}
+	n = \sum_{k=0}^{\infty} n_k.
+	\label{eq:tier}
+\end{equation}
+\newpage
+\noindent The ADOs are given by
+\begin{multline}
+	\rho_{\bm{n}}(q,q') = 
+\int\mathrm{d}q_0 
+\int\mathrm{d}q_0'
+\int_{q_0= q(0)}^{q_t = q(t)} \mathcal{D}[q(\tau)]
+\int_{q_0'= q'(0)}^{q_t'= q'(t)} \mathcal{D}[q'(\tau)]
+\ \rho_0(q_0,q_0')
+\\
+\times F_t(q(\tau),q'(\tau))G_t(q(\tau),q'(\tau))
+\prod_{k=0}^{\infty}
+\left[
+\left(-\frac{\mathrm{i}}{\hbar}\right)^{n_k}f_k^{n_k}(q(\tau),q'(\tau),t)
+\right],
+\end{multline}
+with
+\begin{equation}
+	f_k(q(\tau),q'(\tau),t) = \int_0^{t}\mathrm{d}\tau \mathrm{e}^{-\gamma_k (t-\tau)}
+	[C_k q(\tau)-C_k^*q'(\tau)],
+\end{equation}
+which applies to $\rho_{\{0\}}(q,q')$ as well, hence the name auxiliary \emph{density operator}.
+
+Knowing the form of the coefficients $C_k$ for the chosen bath, we can simplify the equations of motion using the fact that only $C_0$ has a non-zero imaginary part to obtain
+\begin{multline}
+\frac{\partial \hat{\rho}_{\bm{n}} }{\partial t} =
+-\left(\frac{\mathrm{i}}{\hbar}\hat{\mathcal{L}}+\sum_{k=0}^{\infty}n_k \gamma_k \right)\hat{\rho}_{\bm{n}}
+-\frac{\mathrm{i}}{\hbar}\hat{q}^\times \sum_{k=0}^{\infty}\hat{\rho}_{\bm{n}_k^\oplus} \\
+-\frac{\mathrm{i}}{\hbar}(\mathrm{i} n_0 C_0^\mathrm{I})\hat{q}^\circ\hat{\rho}_{\bm{n}_0^\ominus}
+-\frac{\mathrm{i}}{\hbar}\sum_{k=0}^{\infty}n_k C_k^\mathrm{R}\hat{q}^\times\hat{\rho}_{\bm{n}_k^\ominus},
+\label{eq:eom_real}
+\end{multline}
+with $C_k^\mathrm{R} = \mathrm{Re}\{C_k\}$, which affects only $C_0$, and $C_0^\mathrm{I}\equiv \mathrm{Im}\{C_0\}$.
+
+\section{Truncating the infinite hierarchy}\label{sec:truncation}
+So far, all the equations were numerically exact within the given approximations. However, it is of course impossible to simulate an infinite hierarchy on a computer. Therefore, a truncation scheme is necessary. Following notation of Shi and Chen\supercite{Shi2009a,Chen2009a}, we shall introduce two parameters: $K$ and $L$.
+
+$K$ is the maximum index included in the exponential series of the time autocorrelation function $\alpha$, turning eq.~\ref{eq:alpha_series} into
+\begin{equation}
+\alpha(t) = \sum_{k=0}^{K} C_k \mathrm{e}^{-\gamma_k t},
+\end{equation}
+which propagates to all summations and products indexed by $k$ in all definitions and the equations of motion.
+
+$L$ is the maximum tier (defined by eq.~\ref{eq:tier}) present among the ADOs in the hierarchy.
+
+Before we look into the truncation in both of these parameters, it is useful to consider a scaling scheme.
+
+\subsection{Scaling} \label{subsec:scaling}
+Shi and Chen\supercite{Shi2009a,Chen2009a} proposed scaling ADOs as
+\begin{equation}
+\tilde{\rho}_{\bm{n}} = \left(\prod_{k=0}^{\infty}n_k!|C_k|^{n_k}\right)^{-1/2}\rho_{\bm{n}},
+\end{equation}
+which gives rise to equations of motion
+\begin{multline}
+\frac{\partial \hat{\rho}_{\bm{n}} }{\partial t} =
+-\left(\frac{\mathrm{i}}{\hbar}\hat{\mathcal{L}}+\sum_{k=0}^{\infty}n_k \gamma_k \right)\hat{\rho}_{\bm{n}}
+-\frac{\mathrm{i}}{\hbar}\hat{q}^\times
+\sum_{k=0}^{\infty}
+\sqrt{(n_k+1)|C_k|}
+\hat{\rho}_{\bm{n}_k^\oplus} \\
+-\frac{\mathrm{i}}{\hbar}\sum_{k=0}^{\infty}
+\sqrt{n_k/|C_k|}
+\left(C_k\hat{q}\hat{\rho}_{\bm{n}_k^\ominus}-C_k^*\hat{\rho}_{\bm{n}_k^\ominus}\hat{q}\right).
+\end{multline}
+The scaling does not affect the physical density matrix or its dynamics. It also ensures that for large $n$ the amplitude of ADOs tends to zero.
+
+\subsection{$K$: Truncating Matsubara terms}\label{subsec:K_truncation}
+\subsubsection{High temperature approximation}
+At high temperatures, the Matsubara frequencies $\gamma_k = 2\pi k/(\beta\hbar)$ grow sufficiently to effectively truncate the series of the bath time autocorrelation function $\alpha$ (eq.~\ref{eq:alpha_series}) at $k=0$. This is equivalent to saying $\lim\limits_{\beta \to 0}\exp(-\gamma_{k} t) = 0$ for $k\neq 0$. This simplifies eq.~\ref{eq:eom_real} to
+\begin{multline}
+\frac{\partial \hat{\rho}_{n} }{\partial t} =
+-\left(\frac{\mathrm{i}}{\hbar}\hat{\mathcal{L}}+n \gamma \right)\hat{\rho}_{n}
+-\frac{\mathrm{i}}{\hbar}\hat{q}^\times \hat{\rho}_{n +1} \\
+-\frac{n_0 \eta\gamma^2}{2}\hat{q}^\circ\hat{\rho}_{n -1}
+-\frac{\mathrm{i}}{\hbar}\frac{n \hbar \eta \gamma^2}{2}\cot\left(\frac{\beta\hbar\gamma}{2}\right)\hat{q}^\times\hat{\rho}_{n -1},
+\label{eq:qheom_high_temp}
+\end{multline}
+where ADOs are no longer indexed by a $K$-dimensional vector $\bm{n}$, but only by its first component $n_0$, which is now equivalent to the tier of the ADO $n$ (eq.~\ref{eq:tier}). Thus the space of ADOs was ``flattened" into one dimension, where each ADO depends only on the ADO above and below in the hierarchy.
+\subsubsection{Simple truncation}
+Terms up to $k=K$ are included explicitly and all terms with $k>K$ are discarded with no additional correction being made.
+\subsubsection{Ishizaki-Tanimura scheme}
+Ishizaki and Tanimura have suggested a Markovian treatment of the non-explicit $k$-terms.\supercite{Ishizaki2005,Ishizaki2006, Tanimura2006a} This leads to new terms in the equations of motion (eq.~\ref{eq:eom}), giving
+\begin{multline}
+	\frac{\partial \hat{\rho}_{\bm{n}} }{\partial t} =
+	-\left(
+		\frac{\mathrm{i}}{\hbar}\hat{\mathcal{L}}
+		+\sum_{k=0}^{K}n_k \gamma_k
+		+\hat{\Xi}
+	\right)\hat{\rho}_{\bm{n}} \\
+	-\frac{\mathrm{i}}{\hbar}\hat{q}^\times \sum_{k=0}^{K}\hat{\rho}_{\bm{n}_k^\oplus}
+	-\frac{\mathrm{i}}{\hbar}\sum_{k=0}^{K}n_k\left(C_k\hat{q}\hat{\rho}_{\bm{n}_k^\ominus}-C_k^*\hat{\rho}_{\bm{n}_k^\ominus}\hat{q}\right),
+	\label{eq:low_temp_correction}
+\end{multline}
+where the low T correction term $\hat{\Xi}$ is given by
+\begin{equation}
+	\hat{\Xi} = \left(+\frac{\eta}{\beta\hbar^2}
+	-\frac{1}{\hbar^2}\sum_{k=0}^{K} \frac{C_k^\mathrm{R}}{\gamma_k}\right)\hat{q}^\times\hat{q}^\times
+	%-\frac{\mathrm{i}}{\hbar^2}\frac{C_0^\mathrm{I}}{\gamma}\hat{q}^\circ\hat{q}^\times.
+\end{equation}
+This approximation should be justified as long as $\gamma_K \gg \Omega_0$, where $\Omega_0$ is the characteristic frequency of the system.\supercite{Ishizaki2005}
+
+
+\subsection{$L$: Truncating ADO level}\label{subsec:L_truncation}
+\subsubsection{Simple truncation}
+In this scheme, the ADOs are set to zero for tier $n>L$ (where $n$ is given by eq.~\ref{eq:tier}). One can simply converge the calculation with respect to $L$. However, if ADOs are scaled according to Shi and Chen as shown in section \ref{subsec:scaling}, then termination can be justified by a negligible magnitude of the discarded ADO. This can be implemented in the simulation as a pruning step, where at regular intervals all ADOs below the threshold are discarded.
+\subsubsection{Anchor equation}
+The second method, initially proposed by Tanimura,\supercite{Tanimura1991a,Ishizaki2005} uses an anchoring equation. Tanimura shows that for large enough tier $n$, ADOs can be approximated by an expression independent of $n+1$'st ADOs. However, when employed in calculations, scaling and simple truncation was found to be a more robust way of truncating $L$.
+\newpage
+\subsection{Initial state}
+Since we assumed the initial state to be of the factorised form (eq.~\ref{eq:factorised}), functions $f_k(q(\tau),q'(\tau),t=0)=0$ and only the physical density operator contributes at zero time, giving
+\begin{align}
+\rho_{\{0\}}(q,q';t=0) &= \rho_0(q,q'),\\
+\rho_{\bm{n}}(q,q';t=0) &= 0,\ \bm{n} \neq \{0\}.
+\end{align}
+This means that we do not have to evaluate $f_k$'s explicitly since all ADOs emerge naturally during time evolution of the physical density matrix using HEOM. As Tanimura has shown, if a correlated initial state is required, it can be achieved by having non-zero ADOs at $t=0$.\supercite{Tanimura2006a,Tanimura2014}
+\section{HEOM in phase space}\label{sec:phase_space}
+The classical analogues of density matrices are distribution functions. One way of representing quantum density matrices in classical phase space is using the Wigner transform.\supercite{Kubo1964,Hillery1984,Case2008} A Wigner function $W(q,p)$ corresponding to a density operator $\hat{\rho}$ is given by
+\begin{equation}
+	W(q,p) = \frac{1}{2\pi\hbar}\int_{-\infty}^\infty\mathrm{d}y \langle q-y/2|\hat{\rho}|q+y/2\rangle \mathrm{e}^{\mathrm{i}py/\hbar}
+\end{equation}
+or in the momentum representation by
+\begin{equation}
+W(q,p) = \frac{1}{2\pi\hbar}\int\mathrm{d}z \langle p-z/2|\hat{\rho}|p+z/2\rangle \mathrm{e}^{-\mathrm{i}qz/\hbar}.
+\end{equation}
+The Wigner representation of an operator $\hat{A}$ is then
+\begin{equation}
+	A_\mathrm{W}(q,p)=\int_{-\infty}^\infty\mathrm{d}y \langle q-y/2|\hat{A}|q+y/2\rangle \mathrm{e}^{\mathrm{i}py/\hbar}
+\end{equation}
+or can be evaluated analogously in momentum eigenstates. Wigner functions contain all the information present in the original density matrix, and in some ways resemble classical distribution functions, e.g.
+\begin{equation}
+	\int_{-\infty}^\infty \mathrm{d}p\ W(q,p)= \langle x|\hat{\rho}|x\rangle,
+\end{equation}
+\begin{equation}
+\int_{-\infty}^\infty \mathrm{d}p \int_{-\infty}^\infty \mathrm{d}q\ W(q,p)= 1
+\end{equation}
+or
+\begin{equation}
+\int_{-\infty}^\infty \mathrm{d}p \int_{-\infty}^\infty \mathrm{d}q\ A_\mathrm{W}(q,p)W(q,p)= \langle \hat{A}\rangle = \mathrm{Tr}[\hat{A}\hat{\rho}].
+\end{equation}
+However, the Wigner function is not an actual classical distribution function for a quantum system --- that would violate the Heisenberg uncertainty principle. If we took an arbitrary region of phase space and integrated over it to obtain the probability of finding the particle within a given range of positions and momenta, not only would we not get the correct value but we could also end up with negative probabilities.\supercite{Case2008}
+
+Nevertheless, Wigner functions form a bridge between the quantum and the classical description if appropriate limits are taken. The time evolution of the Wigner function can be derived by taking the Wigner transform of the time-evolution equation for the density operator $\partial\hat{\rho}/\partial t = (\mathrm{i}/\hbar)(\hat{\rho}\hat{H}-\hat{H}\hat{\rho})$ to obtain\supercite{Ballentine1998}
+\begin{equation}
+	\frac{\partial W(q,p)}{\partial t} = -\hat{\mathcal{L}}_W W(q,p),
+\end{equation}
+where the Wigner transformed Liouvillian is
+\begin{equation}
+	\hat{\mathcal{L}}_W = \frac{p}{m} \frac{\partial}{\partial x}
+	- \sum_{\ell=1,\mathrm{odd}}^{\infty}
+	\left[\frac{1}{\ell!}\left(\frac{\mathrm{i}\hbar}{2}\right)^{\ell-1}\frac{\partial^{\ell} V(q)}{\partial q^{\ell}}\frac{\partial^{\ell}}{\partial p^{\ell}}\right].
+\end{equation}
+If we take the classical limit of $\hbar\to0$, then we can truncate the infinite series at $\ell=1$ to obtain\footnote[2]{It may seem that the series itself is a sufficient justification for truncation in this limit, but one must also consider the derivatives of the potential and the Wigner function, which may yield additional powers of $\hbar$.\supercite{Ballentine1998} Nevertheless, this truncation is used in the widespread chemical dynamics method LSC-IVR.\supercite{Shi2003}}
+\begin{equation}
+	\lim\limits_{\hbar\to 0}\hat{\mathcal{L}}_W \approx \hat{\mathcal{L}}_\mathrm{C} =\frac{p}{m} \frac{\partial}{\partial x}
+	-\frac{\partial V(q)}{\partial q} \frac{\partial}{\partial p},
+	\label{eq:liouvillian_c}
+\end{equation}
+which is the classical Liouvillian for a phase space distribution. This truncation is exact if the potential is a harmonic oscillator.
+\subsection{Wigner transform of HEOM}
+One can directly evaluate the Wigner transform of the terms in the equation for the time evolution of ADOs (eq.~\ref{eq:eom_real}) to obtain the following relations
+\begin{align}
+	-\frac{\mathrm{i}}{\hbar} \hat{H}^\times \hat{\rho} &\longrightarrow
+	-\hat{\mathcal{L}}_\mathrm{W} W(q,p),\\
+	[\mathrm{const}]\ \hat{\rho} &\longrightarrow [\mathrm{const}]\ W(q,p),\\
+	-\frac{\mathrm{i}}{\hbar} \hat{q}^\times \hat{\rho} &\longrightarrow
+	+\frac{\partial}{\partial p} W(q,p),\\
+	\hat{q}^\circ \hat{\rho} &\longrightarrow 2qW(q,p),
+\end{align}
+which give rise to the phase space formulation of the hierarchical equations of motion
+\begin{multline}
+	\frac{\partial W_{\bm{n}}}{\partial t}=-\left(\hat{\mathcal{L}}_\mathrm{W} +\sum_{k=0}^{\infty}n_k \gamma_k \right)W_{\bm{n}}
+	+ \sum_{k=0}^{\infty} \frac{\partial W_{\bm{n}_k^\oplus}}{\partial p} \\
+	-\frac{\mathrm{i}}{\hbar}(\mathrm{i} n_0 C_0^\mathrm{I})2qW_{\bm{n}_0^\ominus}
+	+ \sum_{k=0}^{\infty} n_k C_k^\mathrm{R}\frac{\partial W_{\bm{n}_k^\ominus}}{\partial p},
+	\label{eq:wigheom}
+\end{multline}
+which is an exact representation of the quantum HEOM in phase space.
+\subsection{Bopp operator derivation}
+Directly evaluating Wigner transforms can be cumbersome and there is an alternative way of obtaining Wigner transformed operators. Assuming that an operator $A_\mathrm{s}(\hat{q},\hat{p})$ has been symmetrised (as described in reference \cite{Kubo1964}) its action on a density operator can simply be rewritten using Bopp operators as\supercite{Kubo1964,Hillery1984}
+\begin{equation}
+	A_\mathrm{s}(\hat{q},\hat{p})\hat{\rho} \longrightarrow	A_\mathrm{s}\left(q-\frac{\hbar}{2\mathrm{i}}\frac{\partial}{\partial p},p+\frac{\hbar}{2\mathrm{i}}\frac{\partial}{\partial q}\right)W(q,p),
+\end{equation}
+and similarly, if the ordering of the operators is reversed,
+\begin{equation}
+\hat{\rho}A_\mathrm{s}(\hat{q},\hat{p}) \longrightarrow
+A_\mathrm{s}\left(q+\frac{\hbar}{2\mathrm{i}}\frac{\partial}{\partial p},p-\frac{\hbar}{2\mathrm{i}}\frac{\partial}{\partial q}\right)W(q,p).
+\end{equation}
+%\newpage
+Furthermore, this can be applied to products of operators as well, giving
+\begin{multline}
+	A_\mathrm{s}(\hat{q},\hat{p})B_\mathrm{s}(\hat{q},\hat{p})\hat{\rho} \longrightarrow \\ A_\mathrm{s}\left(q-\frac{\hbar}{2\mathrm{i}}\frac{\partial}{\partial p},p+\frac{\hbar}{2\mathrm{i}}\frac{\partial}{\partial q}\right)B_\mathrm{s}\left(q-\frac{\hbar}{2\mathrm{i}}\frac{\partial}{\partial p},p+\frac{\hbar}{2\mathrm{i}}\frac{\partial}{\partial q}\right)W(q,p)
+\end{multline}
+If our operators are symmetric (like $\hat{q}$ and $\hat{p}$) or easy to symmetrise, Bopp operators offer an easier way of expressing the Wigner operators. However, for more complicated operators, symmetrising the operator may be as complicated as evaluating the Wigner transform directly.\supercite{Kubo1964}
+
+\subsection{Classical HEOM}
+Upon taking the limit $\hbar \to 0$ for the phase space representation of HEOM (eq.~\ref{eq:wigheom}), we obtain fully classical hierarchical equations of motion
+\begin{equation}
+	\frac{\partial W_{n}}{\partial t}=-\left(\hat{\mathcal{L}}_\mathrm{C} +n \gamma \right)W_{n}
+	+ \frac{\partial W_{n+1}}{\partial p}
+	+\frac{n\eta\gamma}{\beta} \left(\frac{\partial}{\partial p} - \beta \gamma q\right)W_{n-1}.
+	\label{eq:cheom}
+\end{equation}
+All the Matsubara terms from the bath-coordinate time autocorrelation function $\alpha$ (eq.~\ref{eq:alpha_series}) have disappeared, the Liouvillian is now classical (as shown before in eq.~\ref{eq:liouvillian_c}) and the small angle approximation was used to simplify the term involving the cotangent. This leads to a one-dimensional hierarchy, just like in high temperature quantum HEOM in section \ref{subsec:K_truncation}.
+
+%\textcolor{red}{Tanimura in his paper\supercite{Sakurai2011} uses a different form of C\-/HEOM which is supposed to be derived/explained in \cite{Tanimura2006a} and that is:
+%\begin{equation}
+%\frac{\partial W_{n}}{\partial t}=-\left(\hat{\mathcal{L}}_\mathrm{C} +n \gamma \right)W_{n}
+%+ \frac{\partial W_{n+1}}{\partial p}
+%+\frac{n\eta\gamma}{\beta} \left(\frac{\partial}{\partial p} + \frac{\beta}{m} p\right)W_{n-1},
+%\end{equation}
+%This form according to preliminary results agrees better with trajectories with explicit bath, but disagrees with Q\-/HEOM in %equation \ref{eq:qheom_high_temp}
+%}

@@ -1,0 +1,120 @@
+\documentclass[12pt,oneside]{book}
+%\linespread{1.5}
+\usepackage{setspace}
+\usepackage{pdflscape}
+
+%\documentclass[12pt,twoside]{report}
+%\usepackage[a4paper,width=150mm,top=25mm,bottom=25mm]{geometry}
+\usepackage[a4paper, top=25mm,bottom=25mm, inner=4cm,outer=3cm]{geometry}
+
+\usepackage[utf8]{inputenc}
+% Have hyperlinks for references, table of contents etc, but do not show frames
+\usepackage[hidelinks]{hyperref}
+
+\usepackage[author={Adam Prada}]{pdfcomment}
+\usepackage[rgb]{xcolor}
+
+
+\usepackage{caption}
+\usepackage{subcaption}
+% For multiple columns
+\usepackage{multicol}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhead[LE,RO]{}
+\fancyhead[RE,LO]{\leftmark}
+%\fancyhead[RE,LO]{Section \thesection}
+%\fancyfoot[CE,CO]{\leftmark}
+%\fancyfoot[LE,RO]{\thepage}
+% E: Even page
+% O: Odd page
+% L: Left field
+% C: Center field
+% R: Right field
+% H: Header
+% F: Footer
+
+\usepackage{xcolor}
+
+% For including images/figures
+\usepackage{graphicx}
+\graphicspath{ {figures/} }
+
+% For typing maths
+\usepackage{amssymb}
+% For more mathematical symbols
+\usepackage{amsmath}
+\usepackage{bm}
+%\usepackage{physics}
+
+% For non-breaking hyphens
+% Always load as the last package
+\usepackage[shortcuts]{extdash}
+%Standard LaTeX dashes
+%- Standard LaTeX hyphen
+%-- Standard LaTeX en-dash
+%--- Standard LaTeX em-dash
+
+%extdash breakable dashes
+%Words hyphened with these dashes can also be broken at other positions than the dash
+%\-/ hyphen
+%\-- en-dash
+%\--- em-dash
+
+%extdash unbreakable dashes
+%No line breaks possible at the hyphen
+%\=/ hyphen
+%\== en-dash
+%\=== em-dash
+
+%\setlength{\parindent}{0pt}
+%\setlength{\parskip}{0.3em}
+
+%\usepackage[super]{cite}
+%--------------------------------------------------
+\usepackage[
+backend=biber,
+style=chem-rsc,
+]{biblatex}
+
+\addbibresource{bibtex/PhD-first-year_report.bib} %Imports bibliography file
+%--------------------------------------------------
+%\usepackage[super]{natbib}
+
+
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+
+
+\begin{document}
+\frontmatter
+\input{frontmatter/title_page}
+\input{frontmatter/acknowledgements}
+\input{frontmatter/abstract}
+\tableofcontents
+\mainmatter
+\onehalfspacing
+\input{chapters/ch1_introduction}
+
+\input{chapters/ch2_theory}
+
+\input{chapters/ch3_work}
+
+\input{chapters/ch4_conclusions}
+
+%\appendix
+%\chapter{Computational details}
+%\input{chapters/appendix}
+\backmatter
+\singlespacing
+\printbibliography
+%\bibliography{bibtex/partiii-references}{}
+%\bibliographystyle{unsrt}
+
+
+
+%\bibliographystyle{plain}
+
+%\bibliographystyle{IEEEtran}
+
+\end{document}
