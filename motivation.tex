@@ -10,15 +10,15 @@
 % Using the T1 for font encoding ensures better non-ASCII chracters (as opposed to old OT1)
 \usepackage[T1]{fontenc}
 % Next command loads the Latin Modern family of fonts. These look just like LaTeX default Computer Modern, but has more available characters and symbols
-\usepackage{lmodern}
+%\usepackage{lmodern}
 
 
 % Another good combination of font is Palatino:
-%\usepackage{newpxtext}
+\usepackage{newpxtext}
 % with either the default math font:
 %\usepackage{newpxmath}
 % or the Euler math font, which is very nice
-%\usepackage[euler-digits,euler-hat-accent]{eulervm}
+\usepackage[euler-digits,euler-hat-accent]{eulervm}
 
 % A font designed by Knuth, the author of TeX
 %\usepackage{concrete}
@@ -139,138 +139,34 @@
 % DOCUMENT BODY
 %******************************************************************************
 % If you want to use the default document title, then first set the variables
-\title{\LaTeX\ sample}
+\title{Why \LaTeX?}
 \author{Adam Přáda}
-\date{24 July 2019}
+\date{25 July 2019}
 % and then start the document and make the title
 \begin{document}
 \maketitle
-\section{Basics}
-Standard text. Standard text. Standard text. Standard text. Standard text. Standard text. Standard text.
-Only a full empty line creates a full paragraph break.
-
-paragraph break, paragraph break, paragraph break, paragraph break, paragraph break, paragraph break, paragraph break.
-
-Text can be \textnormal{normal}, a.k.a.~\textrm{roman}, \emph{italics} or \textsl{slanted}, \underline{underlined}, \textsf{without serifs}, \texttt{fixed width}, in \textsc{Small Capitals} or just \uppercase{capitals}, \textbf{bold} or \textmd{medium weight}.
-
-You can also have text of different sizes:
-
-{\Huge Huge}
-
-{\huge huge}
-
-{\LARGE LARGE}
-
-{\Large Large}
-
-{\large large}
-
-{\normalsize normalsize}
-
-{\small small}
-
-{\footnotesize footnotesize}
-
-{\scriptsize scriptsize}
-
-{\tiny tiny}
-
-{\fontsize{1.5cm}{2cm}\selectfont custom size}
-% font size + leading
-
-% These commands act within given scope. In this case it is given by {}
-% Can also change and change back or use only within a different object
-
-% You can end the page intentionally like:
+Most people use Microsoft Word for typesetting, so the first question is:
+\section{Why not Microsoft Word?}
+There is plenty of reasons to use Word so let us focus on why not.
+\subsection{The quality of the outcome}
+Yes, it is possible to create professionally looking documents in Word, but one has to be extremely careful to make use of many of its functions, some of which you have probably never heard of. In LaTeX, the default looks great and if you intentionally make changes, then definitely for the better!
+\subsection{Working with complicated documents}
+If your document has any of the following: sections, chapters, figures, tables, footnotes, citations and references, a table of contents, appendices. etc.~, then LaTeX is going to make your life much easier by automatising much of the work.
+\subsection{Working with large documents}
+Microsoft Word can be a demanding program to run on a computer and even more so if the document is very large. LaTeX files are simple text files, that can handle any size and also allow you to split the document into smaller chunks.
 \pagebreak
-% or
-% \newpage
-Sometimes you want to use lists:
-\begin{itemize}
-	\item Item 1
-	\item Item 2
-	\begin{itemize}
-		\item inside item 2
-		\item inside item 2
-		\begin{itemize}
-			\item inside inside
-			\item inside inside
-		\end{itemize}
-		\item inside item 2
-	\end{itemize}
-	\item Item 3
-	\item Item 4
-\end{itemize}
-or numbered lists
-\begin{enumerate}
-	\item first
-	\item second
-\end{enumerate}
-\subsection{Subsection 1}
-There are also subsections
-\subsubsection{Subsubsection 1}
-and subsubsections! Below those, there are only
-\paragraph{Paragraphs} Like this one. Like this one. Like this one. Like this one. Like this one. Like this one. Like this one. Like this one. Like this one. Like this one. Like this one. Like this one. Like this one. Like this one. 
-\pagebreak
-\section{Figures}
-You also need to have figures, like this nice figure number \ref{fig:qheom_contour}.
-\begin{figure} [htp!]
-	% h = here
-	% t = top of page, can do 'b' for bottom
-	% p = separate figure page
-	% ! = override default LaTeX settings
-	% LaTeX automatically chooses from the options that we list
-	\centering
-	\includegraphics [width=11cm]{qheom_contour.pdf}
-	\caption{
-		A contour plot of a wavepacket being equilibrated with a bath in a harmonic potential centered at $q=0$. At $t=0$ the potential is shifted by an addition of a linear term, which creates a new minimum at $q=3/2$~a.u. This is a reproduction of a similar calculation from Tanimura, Wolynes, \emph{Phys.~Rev.~A}, 1991, \textbf{43}, 4131–4142.
-	}
-	\label{fig:qheom_contour}
-\end{figure}
+\subsection{Platform dependence/Portability}
+LaTeX is available on Windows, Mac and pretty much all Linux distributions as well as online by Overleaf. Also, with LaTeX you basically cannot run into a situation, that you send someone a file and it does not work properly because of the version of the software (which one cannot say about Word).
+\subsection{Money}
+Microsoft Office is an expensive software package. LaTeX is an open-source typesetting system, which is free and there are many free graphical editors for all platforms as well.
+\subsection{Openness}
+Both .doc and .docx are closed formats created by Microsoft and not fully disclosed to general public. This means that no one except for Microsoft can make programs that reliably work with them. Sending someone a Word document is basically saying: ``You either buy this expensive piece of software that only one company in the world sells, or use a cheaper alternative, but face the consequences of not-full compatibility." With LaTeX there is plenty of editors and if you really wanted to, you could make your own one. You could also make your own improved version of LaTeX, if you feel like it. (And some people do.)
 
-\section{Mathematics}
-An inline equation $x=3$ inside a paragraph. And a separate equation
-\begin{equation}
-\hat{\rho}_t(q) = \int \mathrm{d}\bm{x}\langle\bm{x}|\hat{\rho}_t(q,\bm{x}) |\bm{x}\rangle,
-\end{equation}
-The equation does not have to be numbered like
-\begin{equation*}
-G_t(q(\tau),q'(\tau)) = \exp\left[\frac{\mathrm{i}}{\hbar}\bigl[S_\mathrm{S}(q(\tau);t)-S_\mathrm{S}(q'(\tau);t)\bigr]\right]
-\end{equation*}
-but if they are numbered
-\begin{equation}
-\hat{\rho}_t(q) = \int \mathrm{d}\bm{x}\langle\bm{x}|\hat{\rho}_t(q,\bm{x}) |\bm{x}\rangle,
-\label{eq:my_equation}
-\end{equation}
-then you can refer to them as eq.~\ref{eq:my_equation}. Some equations are long and need two lines
-\begin{multline}
-\frac{\partial \hat{\rho}_{\bm{n}} }{\partial t} =
--\left(
-\frac{\mathrm{i}}{\hbar}\hat{\mathcal{L}}
-+\sum_{k=0}^{K}n_k \gamma_k
-+\hat{\Xi}
-\right)\hat{\rho}_{\bm{n}} \\
--\frac{\mathrm{i}}{\hbar}\hat{q}^\times \sum_{k=0}^{K}\hat{\rho}_{\bm{n}_k^\oplus}
--\frac{\mathrm{i}}{\hbar}\sum_{k=0}^{K}n_k\left(C_k\hat{q}\hat{\rho}_{\bm{n}_k^\ominus}-C_k^*\hat{\rho}_{\bm{n}_k^\ominus}\hat{q}\right),
-\end{multline}
-Sometimes you want to split the equation, but align it nicely
-\begin{equation}
-\begin{split}
-\frac{\partial \rho_{n}(q_i,q_j) }{\partial t} =
-&-\left(\frac{\mathrm{i}}{\hbar}\hat{\mathcal{L}}+n \gamma \right)\rho_{n}(q_i,q_j)
--\frac{\mathrm{i}}{\hbar}(q_i - q_j) \rho_{n+1}(q_i,q_j) \\
-&-\frac{n_0 \eta\gamma^2}{2}(q_i + q_j) \rho_{n-1}(q_i,q_j) \\
-&-\frac{\mathrm{i}}{\hbar}\frac{n \hbar \eta \gamma^2}{2}\cot\left(\frac{\beta\hbar\gamma}{2}\right)(q_i - q_j) \rho_{n-1}(q_i,q_j).
-\end{split}
-\end{equation}
-Sometimes you want to give people a choice
-\begin{equation}
-H_\mathrm{S}(q_i,q_j) =
-\begin{cases}
-V(q_i) +\frac{\hbar^2\pi^2}{6 m (\Delta q)^2}& \text{for }i=j, \\
-\frac{\hbar^2 }{m (\Delta q)^2 (i-j)^2}(-1)^{i-j} & \text{otherwise,}
-\end{cases}
-\label{eq:dvr_ham}
-\end{equation}
+The least you can do in this regard is to begin using open document formats .odt, .ods, .odp, etc., which Microsoft Office can use, but LibreOffice, OpenOffice and many other programs can use as well. Because these are open, the compatibility will be much better and again, you could make your own program if you wanted to.
+\subsection{Ethics}
+Some people consider the practices that Microsoft uses to get to schools and state institutions unethical.\footnote[2]{Giving their software to schools and state institutions for free or a very low price means, that children will learn only with their software and state institutions will use their document formats to communicate with private entities. Individuals and companies are then basically forced to play the game, which closes the vicious circle.} This and the closed formats may make Microsoft ethically unacceptable for you, in which case you will seek an alternative.
+
+\section{What is \LaTeX?}
+Now that you hopefully want to give \LaTeX a try, we should take a look at what it actually is. Before \LaTeX, there was only \TeX. TeX\footnote[3]{The name consists of three capital Greek letters: T~=~$\tau$ (tau), E~=~$\varepsilon$ (epsilon), X~=~$\chi$ (chi), which happen to look just latin letters `t', `e' and `x'. The correct pronunciation would then be /t$\varepsilon$x/, where X is pronounced like \emph{ch} in \emph{Loch Ness}. However, in commonly used English words of Greek origin, `ch' that originates from $\chi$ is pronounced like `k' (e.g.~in architecture), so pronunciation /t$\varepsilon$k/ is also accepted.} is a typesetting system that was created by Donald Knuth, when he was displeased with how his book about programming was typeset. Because it was very demanding to use, Leslie Lamport created an extension of \TeX which became known as Lamport TeX or \LaTeX. In LaTeX the overly complicated typesetting language is hidden beneath easy-to-use commands, which suffice for vast majority of people. And the rest can always dig deeper and play with TeX itself.
 
 \end{document}
