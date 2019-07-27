@@ -10,15 +10,15 @@
 % Using the T1 for font encoding ensures better non-ASCII chracters (as opposed to old OT1)
 \usepackage[T1]{fontenc}
 % Next command loads the Latin Modern family of fonts. These look just like LaTeX default Computer Modern, but has more available characters and symbols
-%\usepackage{lmodern}
+\usepackage{lmodern}
 
 
 % Another good combination of font is Palatino:
-\usepackage{newpxtext}
+%\usepackage{newpxtext}
 % with either the default math font:
 %\usepackage{newpxmath}
 % or the Euler math font, which is very nice
-\usepackage[euler-digits,euler-hat-accent]{eulervm}
+%\usepackage[euler-digits,euler-hat-accent]{eulervm}
 
 % A font designed by Knuth, the author of TeX
 %\usepackage{concrete}
@@ -113,7 +113,7 @@
 % FOOTNOTES WITH SYMBOLS
 %******************************************************************************
 % I prefer to have footnotes labelled with symbols, to avoid confusion with citations
-\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+%\renewcommand{\thefootnote}{\fnsymbol{footnote}}
 %******************************************************************************
 % NON-BREAKING HYPHENS
 %******************************************************************************
@@ -151,22 +151,66 @@ There is plenty of reasons to use Word so let us focus on why not.
 \subsection{The quality of the outcome}
 Yes, it is possible to create professionally looking documents in Word, but one has to be extremely careful to make use of many of its functions, some of which you have probably never heard of. In LaTeX, the default looks great and if you intentionally make changes, then definitely for the better!
 \subsection{Working with complicated documents}
-If your document has any of the following: sections, chapters, figures, tables, footnotes, citations and references, a table of contents, appendices. etc.~, then LaTeX is going to make your life much easier by automatising much of the work.
+If your document has any of the following: sections, chapters, figures, tables, footnotes, citations and references, a table of contents, appendices, etc., then LaTeX is going to make your life much easier by automatising much of the work.
 \subsection{Working with large documents}
 Microsoft Word can be a demanding program to run on a computer and even more so if the document is very large. LaTeX files are simple text files, that can handle any size and also allow you to split the document into smaller chunks.
 \pagebreak
+\subsection{Mathematics}
+It is much easier to write mathematical formulas in LaTeX than in Word, they look better and there are formulas, which simply cannot be written in Word. In LaTeX much is possible by default, most with packages and everything if you tweak it yourself.
 \subsection{Platform dependence/Portability}
-LaTeX is available on Windows, Mac and pretty much all Linux distributions as well as online by Overleaf. Also, with LaTeX you basically cannot run into a situation, that you send someone a file and it does not work properly because of the version of the software (which one cannot say about Word).
+LaTeX is available on Windows, Mac and pretty much all Linux distributions as well as online by Overleaf. Also, with LaTeX you basically cannot run into a situation, that you send someone a file and it does not work properly because of the version of the software (which one cannot say about Word).\footnote{Yes, if you use some cutting edge features of new packages, it can happen. But even then, since LaTeX packages are out there for free, the rate of adoption is much higher than with commercial software.}
 \subsection{Money}
 Microsoft Office is an expensive software package. LaTeX is an open-source typesetting system, which is free and there are many free graphical editors for all platforms as well.
 \subsection{Openness}
-Both .doc and .docx are closed formats created by Microsoft and not fully disclosed to general public. This means that no one except for Microsoft can make programs that reliably work with them. Sending someone a Word document is basically saying: ``You either buy this expensive piece of software that only one company in the world sells, or use a cheaper alternative, but face the consequences of not-full compatibility." With LaTeX there is plenty of editors and if you really wanted to, you could make your own one. You could also make your own improved version of LaTeX, if you feel like it. (And some people do.)
+Both .doc and .docx are closed formats created by Microsoft and not fully disclosed to the general public. This means that no one except for Microsoft can make programs that reliably work with them. Sending someone a Word document is basically saying: ``You either buy this expensive piece of software that only one company in the world sells, or use a cheaper alternative, but face the consequences of incomplete compatibility.'' With LaTeX there is plenty of editors and if you really wanted to, you could make your own one. You could also make your own improved version of LaTeX, if you feel like it. (And many people did.)
 
-The least you can do in this regard is to begin using open document formats .odt, .ods, .odp, etc., which Microsoft Office can use, but LibreOffice, OpenOffice and many other programs can use as well. Because these are open, the compatibility will be much better and again, you could make your own program if you wanted to.
+The least you can do in this regard is to begin using open document formats .odt, .ods, .odp, etc., which Microsoft Office can use, but LibreOffice, OpenOffice and many other programs can use as well. Because these are open, the compatibility will be much better and again, you could make your own program for editing these if you wanted to.
+\pagebreak
 \subsection{Ethics}
-Some people consider the practices that Microsoft uses to get to schools and state institutions unethical.\footnote[2]{Giving their software to schools and state institutions for free or a very low price means, that children will learn only with their software and state institutions will use their document formats to communicate with private entities. Individuals and companies are then basically forced to play the game, which closes the vicious circle.} This and the closed formats may make Microsoft ethically unacceptable for you, in which case you will seek an alternative.
+Some people consider the practices that Microsoft uses to get into schools and state institutions unethical.\footnote{Giving their software to schools and state institutions for free or a very low price means, that children will learn only with their software and state institutions will use their document formats to communicate with private entities. Individuals and companies are then basically forced to play the game, which closes the vicious circle.} This and the closed formats may make Microsoft ethically unacceptable for you, in which case you will seek an alternative.
 
 \section{What is \LaTeX?}
-Now that you hopefully want to give \LaTeX a try, we should take a look at what it actually is. Before \LaTeX, there was only \TeX. TeX\footnote[3]{The name consists of three capital Greek letters: T~=~$\tau$ (tau), E~=~$\varepsilon$ (epsilon), X~=~$\chi$ (chi), which happen to look just latin letters `t', `e' and `x'. The correct pronunciation would then be /t$\varepsilon$x/, where X is pronounced like \emph{ch} in \emph{Loch Ness}. However, in commonly used English words of Greek origin, `ch' that originates from $\chi$ is pronounced like `k' (e.g.~in architecture), so pronunciation /t$\varepsilon$k/ is also accepted.} is a typesetting system that was created by Donald Knuth, when he was displeased with how his book about programming was typeset. Because it was very demanding to use, Leslie Lamport created an extension of \TeX which became known as Lamport TeX or \LaTeX. In LaTeX the overly complicated typesetting language is hidden beneath easy-to-use commands, which suffice for vast majority of people. And the rest can always dig deeper and play with TeX itself.
+Now that you hopefully want to give LaTeX a try, we should take a look at what it actually is. LaTeX is based on \TeX,\footnote{The name \TeX\ consists of three capital Greek letters: T~=~$\tau$ (tau), E~=~$\varepsilon$ (epsilon), X~=~$\chi$ (chi), which happen to look just latin letters `t', `e' and `x'. The correct pronunciation would then be /t$\varepsilon$x/, where X is pronounced like `ch' in \emph{Loch Ness}. However, in commonly used English words of Greek origin, `ch' that originates from $\chi$ is pronounced like `k' (e.g.~in architecture), so pronunciation /t$\varepsilon$k/ is also accepted.} a typesetting system that was created by Donald Knuth, when he was displeased with how his book about programming was typeset. Because it was very difficult to use, Leslie Lamport created an extension of TeX which became known as Lamport TeX or LaTeX. In LaTeX the overly complicated typesetting language is hidden beneath easy-to-use commands (macros), which suffice for vast majority of people. And the rest can always dig deeper and play with TeX itself. Also, there is a very good chance that someone already took the effort and decided to make their own macros it into a LaTeX package that you can use if you encounter the same problem.
 
+\section{\LaTeX\ mentality}
+The greatest obstacle in adopting LaTeX is the required shift in mentality. Microsoft Word, Apple Pages, LibreOffice or OpenOffice are all so called WYSIWYG\footnote[3]{What you see is what you got.} editors. In these you are trying to produce your document on the screen, such that it looks the way you intend it to. What happens in reality is that the computer tries to interpret what you did, creates a file, and based on it, produces a document accordingly. This usually works quite well for small and simple documents. However, as the document becomes longer or more complex, problems emerge. If one were writing their document linearly, from the beginning till the end, putting in all the references and figures as they go, everything would work ok. This is not what writing of a long document looks like. Things are added and removed, rearranged, edited. This is where LaTeX becomes priceless.
+
+\pagebreak
+
+In LaTeX, the user is writing a text document, which is like a recipe that the computer will use to construct the document. You tell the computer which bits are the titles of chapters and sections, which are equations, which are figures and tables and which are normal text. If, in your text, you refer to one of the figures and chapters, you tell the computer, which one you actually mean (``the figure with the graph of absorbance over wavelength'', ``the section containing the background theory'') Once you have written this recipe, you let your computer do its job and produce the document. On today's computers it takes a second or two, so you can check your product as often as you want.
+
+If you decide to reorder chapters, add a few paragraphs, add a figure, remove a table or make any other changes, the computer knows exactly what you intended when you were writing the document. It knows that old figure 2 is new figure 3, it know that chapters should begin on a new page. It knows that the figure that used to be on page 4 can now move to page 5, because the part of text that is related to it was shifted to page 5. If you decide to change your font size, the spacing, the gap between titles and paragraphs, all of it is automatically done for the whole document. This is the strength of LaTeX. Because you tell the computer what you want, and not what it looks like, it can actually try and produce a document that best suits your requirements. This is similar to giving your chef a recipe as opposed to a picture of what the meal looks like.\footnote{To be fair to Microsoft Word, many of the things that I have mentioned can actually be done. If you very carefully create a template with a set of styles and use the built in cross referencing feature. However, one has to be extremely meticulously obeying these and accidentally changing a font without changing the appropriate style can ruin your day. Also, simply looking at the text, even with non-printing characters shown, does not show you all that Word is doing. In this terribly complicated system of things that you cannot see and can change only deep in one of the menus is practically impossible to navigate without error in a long enough document.} There are some cases, where using LaTeX is clumsy and word is easy, like if you want to manually arrange objects in space. These things still can be done, perhaps with more effort, but since such situations are quite rare in most documents, the advantages usually more than make up for it.
+\pagebreak
+\section{How to learn \LaTeX?}
+Like with many things, the best way to begin is to ``learn by doing''. Then, the whole process of learning shrinks to googling the exact things you need to do, and after a long enough practice, you will be googling less and less. However, it may be useful if you know how to begin.
+
+\subsection{Instalation}
+\begin{itemize}
+	\item Online
+	
+	Perhaps simplest for beginners, but not necessarily the most convenient way. Overleaf (\url{https://www.overleaf.com/}) is the major service in the field, but there are alternatives (e.g.~papeeria.com)
+	\item Offline
+	
+	\begin{enumerate}
+		\item Install TeX + LaTeX, e.g.:
+		\begin{itemize}
+			\item TeXLive --- Linux (\url{https://tug.org/texlive/})
+			\item MacTex --- Mac (\url{http://www.tug.org/mactex/})
+			\item proTeXt --- Windows (\url{http://www.tug.org/protext/})
+		\end{itemize}
+		\item Install a graphical editor, e.g.:
+		\begin{itemize}
+			\item TeXstudio
+			\item TeXmaker
+		\end{itemize}
+		(both on all platforms)
+	\end{enumerate}
+\end{itemize}
+
+\subsection{Usage}
+\begin{itemize}
+	\item Templates that I created (\url{https://github.com/adamprada/latex_samples})
+	\item An Overleaf tutorial (\url{https://www.overleaf.com/learn/latex/Learn_LaTeX_in_30_minutes})
+	\item LaTeX Wikibook for reference (\url{https://en.wikibooks.org/wiki/LaTeX}), but not a good place to begin
+\end{itemize}
 \end{document}
