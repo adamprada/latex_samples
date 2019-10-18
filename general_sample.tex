@@ -110,10 +110,17 @@
 %\usepackage[backend=biber,style=chem-rsc,]{biblatex}
 %\addbibresource{bibtex/PhD-first-year_report.bib} %Imports bibliography file
 %******************************************************************************
-% FOOTNOTES WITH SYMBOLS
+% FOOTNOTES
 %******************************************************************************
 % I prefer to have footnotes labelled with symbols, to avoid confusion with citations
 \renewcommand{\thefootnote}{\fnsymbol{footnote}}
+% or cursive letters
+%\renewcommand{\thefootnote}{\textit{\alph{footnote}}}
+% or roman numerals
+%\renewcommand{\thefootnote}{(\roman{footnote})}
+% or capital roman numerals?
+%\renewcommand{\thefootnote}{(\Roman{footnote})}
+
 %******************************************************************************
 % NON-BREAKING HYPHENS
 %******************************************************************************
